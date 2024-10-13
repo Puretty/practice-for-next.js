@@ -1,0 +1,40 @@
+version: '3'
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENV_MODE: local
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app:cached
+      - /app/node_modules
+    env_file:
+      - .env.local
+    command: "yarn dev"
+    depends_on:
+      - db
+      - mailpit
+
+  db:
+    image: mysql:8.0
+    env_file:
+      - .env.local
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    env_file:
+      - .env.local
+
+volumes:
+  db_data:
