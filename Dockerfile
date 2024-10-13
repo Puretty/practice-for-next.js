@@ -46,18 +46,22 @@ RUN adduser --system --uid 1001 nextjs
 
 # next.config.jsでoutputをstandaloneに設定すると、ビルドに必要な最小限のファイルのみが./next/standaloneに出力されます。
 # standaloneの結果物にはpublicフォルダとstaticフォルダの内容は含まれないため、別途コピーします。
-RUN if [ "$ENV_MODE" = "prod" ]; then \
-    # next.config.jsでoutputをstandaloneに設定すると、ビルドに必要な最小限のファイルのみが./next/standaloneに出力されます。
-    COPY --from=builder /app/public ./public && \
-    COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./ && \
-    COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static; \
-    fi
+# RUN if [ "$ENV_MODE" = "prod" ]; then \
+#     # next.config.jsでoutputをstandaloneに設定すると、ビルドに必要な最小限のファイルのみが./next/standaloneに出力されます。
+#     COPY --from=builder /app/public ./public && \
+#     COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./ && \
+#     COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static; \
+#     fi
+
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # コンテナの待機ポートを3000に設定
 EXPOSE 3000
 
 # nodeでアプリケーションを実行
-CMD ["node", "server.js"] 
-
+#CMD ["node", "server.js"] 
+CMD ["yarn", "start"]
 # standaloneで出力された結果は、nodeでのみ実行可能
 # CMD ["npm", "start"]
