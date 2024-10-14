@@ -1,8 +1,7 @@
 import { selectUser, createUser, deleteUser, updateUser } from './controller';
 
-
-export async function GET() {
-  return selectUser();
+export async function GET(req) {
+  return selectUser(req);
 }
 
 export async function POST(req) {

@@ -1,38 +1,52 @@
 import prisma from '@lib/prisma';
+import { handleErrors } from '@helpers/errorHandlers';
 
-export async function selectUser() {
-  try {
-    const users = await prisma.user.findMany();
-    console.log(users);
-    return new Response(JSON.stringify(users), { status: 200 });
 
-  } catch (error) {
-    console.log(error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch users' }), { status: 500 });
-  }
-}
+export const selectUser = handleErrors(async () => {
+  const users = await prisma.user.findMany();
 
-export async function createUser(req) {
+  return new Response(JSON.stringify(users), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+});
+
+export const createUser = handleErrors(async (req) => {
   const { name, email } = await req.json();
-  const user = await prisma.user.create({
+
+  const createUser = await prisma.user.create({
     data: { name, email },
   });
-  return new Response(JSON.stringify(user), { status: 201 });
-}
+  
+  return new Response(JSON.stringify(createUser), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+});
 
-export async function deleteUser(req) {
+export const deleteUser = handleErrors(async (req) => {
   const { id } = await req.json();
+  
   await prisma.user.delete({
     where: { id },
   });
-  return new Response(null, { status: 204 });
-}
+  
+  return new Response(null, {
+    status: 204,
+    headers: { 'Content-Type': 'application/json' },
+  });
+});
 
-export async function updateUser(req) {
+export const updateUser = handleErrors(async (req) => {
   const { id, name, email } = await req.json();
-  const user = await prisma.user.update({
+
+  const updateUser = await prisma.user.update({
     where: { id },
     data: { name, email },
   });
-  return new Response(JSON.stringify(user), { status: 200 });
-}
+  
+  return new Response(updateUser, {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+});
