@@ -12,10 +12,10 @@ services:
       - .:/app:cached
     env_file:
       - .env.local
-    command: "yarn dev"
     depends_on:
       - db
       - mailpit
+    entrypoint: ["sh", "-c", "yarn dev"]
 
   db:
     image: mysql:8.0

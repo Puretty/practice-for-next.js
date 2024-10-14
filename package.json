@@ -6,12 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma-local-migrate-init": "dotenv -e .env.local -- npx prisma migrate dev --name init",
+    "prisma-local-migrate": "dotenv -e .env.local -- npx prisma migrate dev --name",
+    "prisma-prod-migrate-init": "dotenv -e .env.production -- npx prisma migrate deploy --name init",
+    "prisma-prod-migrate": "dotenv -e .env.production -- npx prisma migrate dev --name"
   },
   "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "dotenv-cli": "^7.4.2",
     "next": "14.2.15",
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.7",
+    "prisma": "^5.20.0",
     "react": "^18",
     "react-dom": "^18"
   }

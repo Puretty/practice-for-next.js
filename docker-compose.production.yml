@@ -12,9 +12,9 @@ services:
       - .:/app:cached
     env_file:
       - .env.production
-    command: "yarn start"
     depends_on:
       - db
+    entrypoint: ["sh", "-c", "yarn start"]
 
   db:
     image: mysql:8.0
